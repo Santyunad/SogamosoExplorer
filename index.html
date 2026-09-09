@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sogamoso Explorer - Guía Turística & Cultural</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS & JS para Mapas Interactivos -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        #interactive-map { height: 450px; width: 100%; border-radius: 1rem; }
+        .page-view { display: none; }
+        .page-view.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="bg-emerald-500 p-2.5 rounded-xl text-slate-900 font-black text-xl">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">Sogamoso</span>
+                        <span class="text-xs block text-slate-400 tracking-widest font-semibold uppercase">Explorer</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden lg:flex space-x-1 items-center font-medium text-sm">
+                    <button onclick="navigateTo('home')" class="px-3 py-2 rounded-lg hover:bg-slate-800 transition" data-i18n="nav_home">Inicio</button>
+                    
+                    <!-- Dropdown Rutas -->
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1">
+                            <span data-i18n="nav_rutas">Rutas Turísticas</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute left-0 mt-1 w-56 bg-slate-800 rounded-xl shadow-2xl py-2 hidden group-hover:block border border-slate-700">
+                            <a href="#" onclick="navigateTo('rutas-ecologicas')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_rutas_eco">1.1 Rutas Ecológicas</a>
+                            <a href="#" onclick="navigateTo('rutas-urbanas')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_rutas_urb">1.2 Rutas Urbanas</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Cultura -->
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1">
+                            <span data-i18n="nav_cultura">Cultura & Historia</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute left-0 mt-1 w-56 bg-slate-800 rounded-xl shadow-2xl py-2 hidden group-hover:block border border-slate-700">
+                            <a href="#" onclick="navigateTo('patrimonio')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_patrimonio">2.1 Patrimonio Arqueológico</a>
+                            <a href="#" onclick="navigateTo('tradiciones')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_tradiciones">2.2 Tradiciones Artesanales</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Gastronomía -->
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1">
+                            <span data-i18n="nav_gastronomia">Gastronomía</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute left-0 mt-1 w-56 bg-slate-800 rounded-xl shadow-2xl py-2 hidden group-hover:block border border-slate-700">
+                            <a href="#" onclick="navigateTo('platos-tipicos')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_platos">3.1 Platos Típicos</a>
+                            <a href="#" onclick="navigateTo('cafes-postres')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_cafes">3.2 Cafés y Repostería</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Eventos -->
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-lg hover:bg-slate-800 transition flex items-center gap-1">
+                            <span data-i18n="nav_eventos">Eventos & Festivales</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute left-0 mt-1 w-56 bg-slate-800 rounded-xl shadow-2xl py-2 hidden group-hover:block border border-slate-700">
+                            <a href="#" onclick="navigateTo('festividades')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_festivales">4.1 Festividades Anuales</a>
+                            <a href="#" onclick="navigateTo('deportes-aventura')" class="block px-4 py-2 hover:bg-emerald-600/30 text-xs" data-i18n="nav_deportes">4.2 Eventos Deportivos</a>
+                        </div>
+                    </div>
+
+                    <button onclick="navigateTo('mapa-interactivo')" class="px-3 py-2 rounded-lg bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white transition font-semibold" data-i18n="nav_mapa">
+                        <i class="fa-solid fa-map"></i> Mapa Interactivo
+                    </button>
+                    <button onclick="navigateTo('creditos')" class="px-3 py-2 rounded-lg hover:bg-slate-800 transition text-slate-400" data-i18n="nav_creditos">Créditos</button>
+                </nav>
+
+                <!-- Language Toggle & Mobile Menu -->
+                <div class="flex items-center space-x-3">
+                    <button id="lang-btn" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-full border border-slate-700 bg-slate-800 text-slate-200 text-xs font-bold hover:bg-emerald-500 hover:text-slate-900 transition">
+                        ES / EN
+                    </button>
+                    <button class="lg:hidden text-slate-300 text-2xl" onclick="toggleMobileMenu()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-800 px-4 pt-2 pb-6 space-y-2 text-sm border-t border-slate-700">
+            <button onclick="navigateTo('home')" class="block w-full text-left py-2 border-b border-slate-700">Inicio</button>
+            <button onclick="navigateTo('rutas-ecologicas')" class="block w-full text-left py-2 pl-4 text-emerald-400">1.1 Rutas Ecológicas</button>
+            <button onclick="navigateTo('rutas-urbanas')" class="block w-full text-left py-2 pl-4 text-emerald-400">1.2 Rutas Urbanas</button>
+            <button onclick="navigateTo('patrimonio')" class="block w-full text-left py-2 pl-4 text-emerald-400">2.1 Patrimonio Arqueológico</button>
+            <button onclick="navigateTo('tradiciones')" class="block w-full text-left py-2 pl-4 text-emerald-400">2.2 Tradiciones Artesanales</button>
+            <button onclick="navigateTo('platos-tipicos')" class="block w-full text-left py-2 pl-4 text-emerald-400">3.1 Platos Típicos</button>
+            <button onclick="navigateTo('cafes-postres')" class="block w-full text-left py-2 pl-4 text-emerald-400">3.2 Cafés y Repostería</button>
+            <button onclick="navigateTo('festividades')" class="block w-full text-left py-2 pl-4 text-emerald-400">4.1 Festividades Anuales</button>
+            <button onclick="navigateTo('deportes-aventura')" class="block w-full text-left py-2 pl-4 text-emerald-400">4.2 Eventos Deportivos</button>
+            <button onclick="navigateTo('mapa-interactivo')" class="block w-full text-left py-2 font-bold text-teal-300">Mapa Interactivo</button>
+            <button onclick="navigateTo('creditos')" class="block w-full text-left py-2 text-slate-400">Créditos (APA)</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. HOME PAGE -->
+        <section id="page-home" class="page-view active">
+            <div class="relative rounded-3xl overflow-hidden bg-slate-900 text-white shadow-2xl mb-12">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" alt="Sogamoso" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                <div class="relative z-10 max-w-3xl p-8 sm:p-16">
+                    <span class="bg-emerald-500/20 text-emerald-300 text-xs font-extrabold uppercase px-3 py-1 rounded-full border border-emerald-500/30" data-i18n="hero_badge">Boyacá, Colombia</span>
+                    <h1 class="text-4xl sm:text-6xl font-black mt-4 mb-6 leading-tight" data-i18n="hero_title">Descubre la Ciudad del Sol y del Acero</h1>
+                    <p class="text-slate-300 text-lg mb-8 leading-relaxed" data-i18n="hero_subtitle">Explora rutas naturales de los Andes, sumérgete en el legado ancestral Muisca y disfruta de la mejor gastronomía boyacense en Sogamoso.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="navigateTo('mapa-interactivo')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold px-6 py-3.5 rounded-xl transition shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot"></i> <span data-i18n="btn_explore_map">Explorar Mapa de Rutas</span>
+                        </button>
+                        <button onclick="navigateTo('rutas-ecologicas')" class="bg-slate-800/80 hover:bg-slate-700 text-white font-bold px-6 py-3.5 rounded-xl border border-slate-600 transition" data-i18n="btn_see_routes">Ver Rutas</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Overview Grid -->
+            <h2 class="text-2xl font-black mb-6 text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-emerald-600"></i> <span data-i18n="section_explorer_title">Explora por Categorías</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Cat 1 -->
+                <div onclick="navigateTo('rutas-ecologicas')" class="glass-card p-6 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border hover:border-emerald-500 group">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-1" data-i18n="cat_1_title">Rutas Turísticas</h3>
+                    <p class="text-xs text-slate-500" data-i18n="cat_1_desc">Páramo de Pisba, Sendero La Pillama y recorridos urbanos históricos.</p>
+                </div>
+                <!-- Cat 2 -->
+                <div onclick="navigateTo('patrimonio')" class="glass-card p-6 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border hover:border-emerald-500 group">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-1" data-i18n="cat_2_title">Cultura & Historia</h3>
+                    <p class="text-xs text-slate-500" data-i18n="cat_2_desc">Museo Arqueológico Suamox, Templo del Sol y herencia indígena Muisca.</p>
+                </div>
+                <!-- Cat 3 -->
+                <div onclick="navigateTo('platos-tipicos')" class="glass-card p-6 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border hover:border-emerald-500 group">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-1" data-i18n="cat_3_title">Gastronomía</h3>
+                    <p class="text-xs text-slate-500" data-i18n="cat_3_desc">Cocido Boyacense, Arepas de la Villa del Sol y repostería artesanal.</p>
+                </div>
+                <!-- Cat 4 -->
+                <div onclick="navigateTo('festividades')" class="glass-card p-6 rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border hover:border-emerald-500 group">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-calendar-star"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-1" data-i18n="cat_4_title">Eventos & Festivales</h3>
+                    <p class="text-xs text-slate-500" data-i18n="cat_4_desc">Fiestas del Sol y del Acero, Encuentros de Ciclismo y Festivales de Danza.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SUBSECTION: RUTAS ECOLÓGICAS (1.1) -->
+        <section id="page-rutas-ecologicas" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Sección 1: Rutas Turísticas</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_1_1_title">1.1 Rutas Ecológicas y de Naturaleza</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_1_1_desc">Senderos naturales y ecosistemas andinos que rodean el municipio de Sogamoso.</p>
+            </div>
+            <div id="grid-rutas-ecologicas" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 3. SUBSECTION: RUTAS URBANAS (1.2) -->
+        <section id="page-rutas-urbanas" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Sección 1: Rutas Turísticas</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_1_2_title">1.2 Rutas Urbanas y Arquitectónicas</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_1_2_desc">Recorridos a pie por plazas, plazas de mercado y patrimonio del casco urbano.</p>
+            </div>
+            <div id="grid-rutas-urbanas" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 4. SUBSECTION: PATRIMONIO ARQUEOLÓGICO (2.1) -->
+        <section id="page-patrimonio" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Sección 2: Cultura e Historia</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_2_1_title">2.1 Patrimonio Arqueológico e Histórico</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_2_1_desc">Sitiología sagrada y legado cultural de la civilización Muisca en Suamox.</p>
+            </div>
+            <div id="grid-patrimonio" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 5. SUBSECTION: TRADICIONES ARTESANALES (2.2) -->
+        <section id="page-tradiciones" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Sección 2: Cultura e Historia</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_2_2_title">2.2 Tradiciones Artesanales y Saberes</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_2_2_desc">Expresiones artesanales, tejeduría en lana y alfarería tradicional.</p>
+            </div>
+            <div id="grid-tradiciones" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 6. SUBSECTION: PLATOS TÍPICOS (3.1) -->
+        <section id="page-platos-tipicos" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-red-600 uppercase tracking-widest">Sección 3: Gastronomía</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_3_1_title">3.1 Platos Típicos y Autóctonos</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_3_1_desc">La auténtica sazón boyacense con ingredientes locales de la sabana.</p>
+            </div>
+            <div id="grid-platos-tipicos" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 7. SUBSECTION: CAFÉS Y POSTRES (3.2) -->
+        <section id="page-cafes-postres" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-red-600 uppercase tracking-widest">Sección 3: Gastronomía</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_3_2_title">3.2 Cafés Especiales y Repostería</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_3_2_desc">Espacios acogedores para degustar café de origen y almojábanas calientes.</p>
+            </div>
+            <div id="grid-cafes-postres" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 8. SUBSECTION: FESTIVIDADES ANUALES (4.1) -->
+        <section id="page-festividades" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Sección 4: Eventos y Festivales</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_4_1_title">4.1 Festividades Anuales y Culturales</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_4_1_desc">Celebraciones icónicas que reúnen la música, danza y tradición del municipio.</p>
+            </div>
+            <div id="grid-festividades" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 9. SUBSECTION: DEPORTES Y AVENTURA (4.2) -->
+        <section id="page-deportes-aventura" class="page-view">
+            <div class="mb-8">
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Sección 4: Eventos y Festivales</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="sec_4_2_title">4.2 Eventos Deportivos y Aventura</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="sec_4_2_desc">Encuentros de cilomontañismo, atletismo y competencias regionales.</p>
+            </div>
+            <div id="grid-deportes-aventura" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- 10. MAPA INTERACTIVO DE RUTAS -->
+        <section id="page-mapa-interactivo" class="page-view">
+            <div class="mb-6">
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Sistema de Geolocalización</span>
+                <h1 class="text-3xl font-extrabold text-slate-900 mt-1" data-i18n="map_page_title">Mapa Interactivo de Experiencias y Rutas</h1>
+                <p class="text-slate-600 mt-2 text-sm" data-i18n="map_page_desc">Haz clic en los marcadores interactivos para explorar cada punto de interés turístico en Sogamoso y sus alrededores.</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-xl border border-slate-200">
+                <div id="interactive-map"></div>
+            </div>
+        </section>
+
+        <!-- 11. CRÉDITOS Y REFERENCIAS APA -->
+        <section id="page-creditos" class="page-view">
+            <div class="max-w-4xl mx-auto bg-white p-8 sm:p-12 rounded-3xl shadow-xl border border-slate-200">
+                <h1 class="text-3xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Créditos & Referencias (APA)
+                </h1>
+                
+                <div class="space-y-6 text-sm text-slate-700 leading-relaxed">
+                    <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-emerald-500">
+                        <h3 class="font-bold text-slate-900">Desarrollo del Proyecto Multimedia</h3>
+                        <p><strong>Estudiante:</strong> David Santiago Camacho Dávila</p>
+                        <p><strong>Curso:</strong> Aplicaciones Multimedia (Código 213026)</p>
+                        <p><strong>Programa:</strong> Ingeniería Multimedia</p>
+                        <p><strong>Institución:</strong> Universidad Nacional Abierta y a Distancia (UNAD)</p>
+                    </div>
+
+                    <h2 class="text-lg font-bold text-slate-900 pt-4 border-t">Referencias Bibliográficas & Fuentes (Normas APA 7ma Ed.)</h2>
+                    <ul class="list-disc pl-5 space-y-3 font-mono text-xs">
+                        <li>Alcaldía Mayor de Sogamoso. (2024). <em>Plan de Desarrollo Turístico y Cultural del Municipio de Sogamoso, Boyacá</em>. Imprenta Municipal.</li>
+                        <li>Instituto Colombiano de Antropología e Historia [ICANH]. (2022). <em>Parque Arqueológico Templo del Sol Suamox: Guía histórica y patrimonial</em>. Ministerio de Cultura de Colombia.</li>
+                        <li>Unsplash & Pexels. (2026). <em>Banco de imágenes libres de derechos para producción multimedia educativa</em>. Recupeardas de https://unsplash.com</li>
+                        <li>LeafletJS OpenStreetMap Contributors. (2026). <em>Interactive map routing tiles framework API</em>. https://leafletjs.com</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>© 2026 <strong>Sogamoso Explorer</strong> - Aplicación Web de Turismo Local.</p>
+            <p>Desarrollado para el curso de Aplicaciones Multimedia | Universidad Nacional Abierta y a Distancia (UNAD).</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Data Store (24 experiencias distribuidas en 8 subsecciones)
+        const experiencesData = {
+            "rutas-ecologicas": [
+                {
+                    id: 1,
+                    title_es: "Sendero Ecológico La Pillama",
+                    title_en: "La Pillama Ecological Trail",
+                    desc_es: "Ruta de senderismo de alta montaña que conecta con bosques de roble y nacimientos de agua cristalina a las afueras de la ciudad.",
+                    desc_en: "High mountain hiking route connecting oak forests and crystal-clear water sources on the outskirts of the city.",
+                    img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.725, lng: -72.920, location: "Sector Rural La Pillama"
+                },
+                {
+                    id: 2,
+                    title_es: "Caminata al Cerro del Chinchanal",
+                    title_en: "Chinchanal Hill Hike",
+                    desc_es: "Mirador natural panorámico que ofrece la mejor vista de todo el Valle de Sugamuxi y la cordillera Oriental.",
+                    desc_en: "Natural panoramic viewpoint offering the best view of the entire Sugamuxi Valley and Eastern Range.",
+                    img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.710, lng: -72.940, location: "Vereda Moniquirá"
+                },
+                {
+                    id: 3,
+                    title_es: "Ruta al Páramo de Pisba",
+                    title_en: "Pisba Páramo Expedition",
+                    desc_es: "Recorrido ecosistémico de frailejones y lagunas de alta montaña cargado de biodiversidad e historia republicana.",
+                    desc_en: "Ecosystemic tour of frailejones and high mountain lagoons filled with biodiversity and history.",
+                    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.740, lng: -72.900, location: "Límite Páramo Pisba"
+                }
+            ],
+            "rutas-urbanas": [
+                {
+                    id: 4,
+                    title_es: "Plaza de la Villa y Catedral",
+                    title_en: "Villa Square & Cathedral",
+                    desc_es: "El corazón del centro histórico donde convergen la Catedral San Martín de Tours y la arquitectura republicana.",
+                    desc_en: "The heart of the historic center where San Martin de Tours Cathedral meets republican architecture.",
+                    img: "https://images.unsplash.com/photo-1548625361-1882f0d9c490?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.7153, lng: -72.9333, location: "Centro Histórico"
+                },
+                {
+                    id: 5,
+                    title_es: "Paseo de la 6ta y Zona Comercial",
+                    title_en: "6th Avenue Commercial Walk",
+                    desc_es: "Paseo peatonal y boulevard gastronómico adornado con esculturas e iluminación nocturna en el centro.",
+                    desc_en: "Pedestrian walkway and gastronomic boulevard decorated with sculptures and vibrant night lights.",
+                    img: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.7170, lng: -72.9310, location: "Carrera 11 / Calle 6"
+                },
+                {
+                    id: 6,
+                    title_es: "Plaza de Mercado Central",
+                    title_en: "Central Farmer's Market",
+                    desc_es: "Inmersión cultural y sensorial en la despensa agrícola del valle con frutas frescas y tradición boyacense.",
+                    desc_en: "Cultural and sensory immersion in the agricultural hub of the valley with fresh fruits and traditions.",
+                    img: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.7185, lng: -72.9350, location: "Plaza Central"
+                }
+            ],
+            "patrimonio": [
+                {
+                    id: 7,
+                    title_es: "Museo Arqueológico Suamox",
+                    title_en: "Suamox Archaeological Museum",
+                    desc_es: "Fundado por Eliécer Silva Célis, resguarda momias muiscas, utensilios y el célebre Templo del Sol reconstruido.",
+                    desc_en: "Founded by Eliécer Silva Celis, housing Muisca mummies, artifacts, and the reconstructed Sun Temple.",
+                    img: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.722, lng: -72.928, location: "Calle 19 # 3-101"
+                },
+                {
+                    id: 8,
+                    title_es: "Réplica del Templo del Sol Muisca",
+                    title_en: "Replica of Muisca Sun Temple",
+                    desc_es: "Estructura sagrada en paja y maderos donde se rendía culto a Chiminigagua y la cosmogónia Muisca.",
+                    desc_en: "Sacred structure made of straw and wood where ancient Muiscas worshipped the Sun deity.",
+                    img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.723, lng: -72.927, location: "Parque Arqueológico"
+                },
+                {
+                    id: 9,
+                    title_es: "Monumento a La Mochila Muisca",
+                    title_en: "Muisca Bag Monument",
+                    desc_es: "Escultura urbana en homenaje a los saberes textiles y la cosmovisión de las comunidades indígenas ancestrales.",
+                    desc_en: "Urban sculpture honoring textile skills and the worldview of ancient indigenous communities.",
+                    img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.713, lng: -72.937, location: "Entrada Sur Sogamoso"
+                }
+            ],
+            "tradiciones": [
+                {
+                    id: 10,
+                    title_es: "Taller de Tejeduría Nobsa-Sogamoso",
+                    title_en: "Wool Weaving Workshop",
+                    desc_es: "Demostración en vivo del hilado manual con lana virgen y confección de ruanas tradicionales boyacenses.",
+                    desc_en: "Live demonstration of manual spinning with virgin wool and traditional Colombian poncho creation.",
+                    img: "https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.730, lng: -72.930, location: "Barrio el Carmen"
+                },
+                {
+                    id: 11,
+                    title_es: "Alfarería Tradicional de Morcá",
+                    title_en: "Morcá Pottery Tradition",
+                    desc_es: "Vereda artesanal famosa por la fabricación manual de piezas utilitarias en arcilla cocida.",
+                    desc_en: "Craft village famous for handcrafting utilitarian pottery and clay pieces.",
+                    img: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.690, lng: -72.900, location: "Vereda Morcá"
+                },
+                {
+                    id: 12,
+                    title_es: "Galería de Artesanías de la 11",
+                    title_en: "Crafts Gallery 11th Street",
+                    desc_es: "Mercado artesanal permanente con cestería, tallas en madera y recuerdos típicos del departamento.",
+                    desc_en: "Permanent craft market featuring basketry, wood carvings, and local souvenirs.",
+                    img: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.716, lng: -72.932, location: "Carrera 11 Centro"
+                }
+            ],
+            "platos-tipicos": [
+                {
+                    id: 13,
+                    title_es: "Auténtico Cocido Boyacense",
+                    title_en: "Authentic Boyacense Stew",
+                    desc_es: "Plato emblemático con cubios, ibias, chuguas, carnes curadas y mazo de maíz tierno cocinado a fuego lento.",
+                    desc_en: "Emblematic dish cooked with native tubers, cured meats, and fresh sweet corn.",
+                    img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.715, lng: -72.933, location: "Restaurante La Casona"
+                },
+                {
+                    id: 14,
+                    title_es: "Arepa Boyacense al Carbón",
+                    title_en: "Charcoal Boyacense Arepa",
+                    desc_es: "Famosa arepa de maíz pelao rellena con abundante queso campesino y dorada al carbón de leña.",
+                    desc_en: "Famous corn cake stuffed with fresh local cheese and grilled over charcoal.",
+                    img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.720, lng: -72.935, location: "Paradero La Arepa"
+                },
+                {
+                    id: 15,
+                    title_es: "Sopa de Cuchuco de Trigo con Espinazo",
+                    title_en: "Wheat Soup with Pork Ribs",
+                    desc_es: "Sopa nutrida de trigo troceado con espinazo de cerdo, habas, arvejas y papas sabaneras.",
+                    desc_en: "Hearty soup with crushed wheat, pork ribs, fava beans, peas, and Andean potatoes.",
+                    img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.714, lng: -72.932, location: "Asaderos del Centro"
+                }
+            ],
+            "cafes-postres": [
+                {
+                    id: 16,
+                    title_es: "Almojábanas y Masato de Sugamuxi",
+                    title_en: "Almojábanas & Fermented Rice Drink",
+                    desc_es: "Mecato tradicional caliente perfecto para la tarde acompañado de masato de arroz o chicha artesanal.",
+                    desc_en: "Traditional baked cheese breads served warm alongside sweet rice-based drinks.",
+                    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.716, lng: -72.934, location: "Café de la Plaza"
+                },
+                {
+                    id: 17,
+                    title_es: "Café de Origen del Macizo Colombiano",
+                    title_en: "Specialty Origin Coffee Shop",
+                    desc_es: "Experiencia de barismo profesional con filtrados de café boyacense de altura y notas afrutadas.",
+                    desc_en: "Professional barista experience featuring high-altitude Boyacá specialty coffee blends.",
+                    img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.717, lng: -72.930, location: "Zona Rosa Calle 11"
+                },
+                {
+                    id: 18,
+                    title_es: "Postres de Curuba y Feijoa",
+                    title_en: "Curuba & Feijoa Desserts",
+                    desc_es: "Esponjados, sabajones y dulces artesanales preparados con frutas autóctonas de la región.",
+                    desc_en: "Artisanal desserts and mousses prepared with local native exotic fruits.",
+                    img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.718, lng: -72.929, location: "Reposteria Suamox"
+                }
+            ],
+            "festividades": [
+                {
+                    id: 19,
+                    title_es: "Fiestas del Sol y del Acero",
+                    title_en: "Sun & Steel Festival",
+                    desc_es: "Celebración magna de julio con comparsas, desfiles de carrozas, música campesina y eventos culturales.",
+                    desc_en: "Major July celebration featuring parades, floats, traditional folk music, and cultural events.",
+                    img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.715, lng: -72.933, location: "Plaza de Eventos"
+                },
+                {
+                    id: 20,
+                    title_es: "Festival del Huan en Morcá",
+                    title_en: "Huan Cultural Festival",
+                    desc_es: "Encuentro de saberes ancestrales y agradecimiento muisca a las cosechas durante el solsticio.",
+                    desc_en: "Ancestral gathering celebrating harvest traditions and Muisca solstice rituals.",
+                    img: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.692, lng: -72.901, location: "Santuario de Morcá"
+                },
+                {
+                    id: 21,
+                    title_es: "Aguinaldo Sogamoseño Navideño",
+                    title_en: "Christmas Light Festival",
+                    desc_es: "Alumbrado navideño de plazas, parques y veredas acompañado de novenas y verbenas populares.",
+                    desc_en: "Christmas light displays in public parks accompanied by traditional holiday music.",
+                    img: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.715, lng: -72.933, location: "Parque Principal"
+                }
+            ],
+            "deportes-aventura": [
+                {
+                    id: 22,
+                    title_es: "Clásica Ciclística de Sugamuxi",
+                    title_en: "Sugamuxi Cycling Classic",
+                    desc_es: "Competencia de ciclismo de ruta que asciende por los míticos puertos de montaña de la región.",
+                    desc_en: "Road cycling tournament ascending the iconic high-altitude mountain passes of the region.",
+                    img: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.720, lng: -72.940, location: "Circuito Urbano y Rural"
+                },
+                {
+                    id: 23,
+                    title_es: "Travesía MTB Rodada Sugamuxi",
+                    title_en: "Sugamuxi MTB Challenge",
+                    desc_es: "Evento de ciclismomontañismo por trochas, veredas y caminos reales hacia la laguna de Tota.",
+                    desc_en: "Mountain biking endurance trail crossing rural roads and ancient pathways.",
+                    img: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.700, lng: -72.910, location: "Ruta Sogamoso-Tota"
+                },
+                {
+                    id: 24,
+                    title_es: "Copa de Escalada en Roca",
+                    title_en: "Rock Climbing Cup",
+                    desc_es: "Encuentro deportivo de escalada sobre paredes naturales de arenisca en los cañones cercanos.",
+                    desc_en: "Outdoor sports climbing event on natural sandstone cliff faces near the city boundaries.",
+                    img: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=600&q=80",
+                    lat: 5.735, lng: -72.915, location: "Farallones del Norte"
+                }
+            ]
+        };
+
+        // State Management
+        let currentLang = 'es';
+        let mapInstance = null;
+
+        // Internationalization Dictionaries
+        const i18n = {
+            es: {
+                nav_home: "Inicio", nav_rutas: "Rutas Turísticas", nav_rutas_eco: "1.1 Rutas Ecológicas",
+                nav_rutas_urb: "1.2 Rutas Urbanas", nav_cultura: "Cultura & Historia", nav_patrimonio: "2.1 Patrimonio Arqueológico",
+                nav_tradiciones: "2.2 Tradiciones Artesanales", nav_gastronomia: "Gastronomía", nav_platos: "3.1 Platos Típicos",
+                nav_cafes: "3.2 Cafés y Repostería", nav_eventos: "Eventos & Festivales", nav_festivales: "4.1 Festividades Anuales",
+                nav_deportes: "4.2 Eventos Deportivos", nav_mapa: "Mapa Interactivo", nav_creditos: "Créditos",
+                hero_badge: "Sogamoso, Boyacá", hero_title: "Descubre la Ciudad del Sol y del Acero",
+                hero_subtitle: "Explora rutas naturales de los Andes, sumérgete en el legado ancestral Muisca y disfruta de la mejor gastronomía boyacense.",
+                btn_explore_map: "Explorar Mapa de Rutas", btn_see_routes: "Ver Rutas",
+                section_explorer_title: "Explora por Categorías", cat_1_title: "Rutas Turísticas", cat_1_desc: "Senderos verdes y circuitos urbanos.",
+                cat_2_title: "Cultura & Historia", cat_2_desc: "Museos, Templo del Sol y tradición.", cat_3_title: "Gastronomía",
+                cat_3_desc: "Cocido boyacense, arepas y cafés.", cat_4_title: "Eventos & Festivales", cat_4_desc: "Fiestas del Sol y ciclismo.",
+                sec_1_1_title: "1.1 Rutas Ecológicas y de Naturaleza", sec_1_1_desc: "Senderos naturales y ecosistemas andinos que rodean Sogamoso.",
+                sec_1_2_title: "1.2 Rutas Urbanas y Arquitectónicas", sec_1_2_desc: "Recorridos por el casco urbano e hitos emblemáticos.",
+                sec_2_1_title: "2.1 Patrimonio Arqueológico e Histórico", sec_2_1_desc: "Legado sagrado de la cultura Muisca.",
+                sec_2_2_title: "2.2 Tradiciones Artesanales y Saberes", sec_2_2_desc: "Tejeduría tradicional en lana y alfarería.",
+                sec_3_1_title: "3.1 Platos Típicos y Autóctonos", sec_3_1_desc: "Gastronomía ancestral de Boyacá.",
+                sec_3_2_title: "3.2 Cafés Especiales y Repostería", sec_3_2_desc: "Bebidas de origen y horneados tradicionales.",
+                sec_4_1_title: "4.1 Festividades Anuales y Culturales", sec_4_1_desc: "Celebraciones folclóricas del municipio.",
+                sec_4_2_title: "4.2 Eventos Deportivos y Aventura", sec_4_2_desc: "Ciclismo de montaña y competencias outdoor.",
+                map_page_title: "Mapa Interactivo de Experiencias y Rutas",
+                map_page_desc: "Navega espacialmente por cada experiencia geográfica en Sogamoso.",
+                btn_view_map_point: "Ver en Mapa"
+            },
+            en: {
+                nav_home: "Home", nav_rutas: "Tourist Routes", nav_rutas_eco: "1.1 Ecological Routes",
+                nav_rutas_urb: "1.2 Urban Routes", nav_cultura: "Culture & History", nav_patrimonio: "2.1 Archaeological Heritage",
+                nav_tradiciones: "2.2 Craft Traditions", nav_gastronomia: "Gastronomy", nav_platos: "3.1 Typical Dishes",
+                nav_cafes: "3.2 Coffee & Pastries", nav_eventos: "Events & Festivals", nav_festivales: "4.1 Annual Festivals",
+                nav_deportes: "4.2 Sports & Adventure", nav_mapa: "Interactive Map", nav_creditos: "Credits",
+                hero_badge: "Sogamoso, Boyacá", hero_title: "Discover the City of Sun and Steel",
+                hero_subtitle: "Explore Andean natural trails, immerse yourself in ancestral Muisca heritage, and enjoy top Boyacense gastronomy.",
+                btn_explore_map: "Explore Interactive Map", btn_see_routes: "View Routes",
+                section_explorer_title: "Explore by Categories", cat_1_title: "Tourist Routes", cat_1_desc: "Ecological hiking and urban walks.",
+                cat_2_title: "Culture & History", cat_2_desc: "Museums, Sun Temple and traditions.", cat_3_title: "Gastronomy",
+                cat_3_desc: "Boyacense stew, corn cakes, and origin coffee.", cat_4_title: "Events & Festivals", cat_4_desc: "Sun Festival and mountain biking.",
+                sec_1_1_title: "1.1 Ecological & Nature Routes", sec_1_1_desc: "Natural trails and Andean ecosystems around Sogamoso.",
+                sec_1_2_title: "1.2 Urban & Architectural Routes", sec_1_2_desc: "Historic downtown walks and landmarks.",
+                sec_2_1_title: "2.1 Archaeological & Historic Heritage", sec_2_1_desc: "Sacred heritage of the Muisca civilization.",
+                sec_2_2_title: "2.2 Craft Traditions & Knowledge", sec_2_2_desc: "Wool weaving and traditional clay pottery.",
+                sec_3_1_title: "3.1 Typical & Native Dishes", sec_3_1_desc: "Ancestral gastronomy of Boyacá.",
+                sec_3_2_title: "3.2 Specialty Coffee & Bakeries", sec_3_2_desc: "Origin coffee drinks and baked goods.",
+                sec_4_1_title: "4.1 Annual & Cultural Festivals", sec_4_1_desc: "Folklore and city celebrations.",
+                sec_4_2_title: "4.2 Sports & Outdoor Events", sec_4_2_desc: "Mountain biking and outdoor climbing.",
+                map_page_title: "Interactive Map of Routes & Highlights",
+                map_page_desc: "Spatially navigate every geographical experience in Sogamoso.",
+                btn_view_map_point: "Locate on Map"
+            }
+        };
+
+        // Navigation Router SPA
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            if (pageId === 'mapa-interactivo') {
+                setTimeout(initMap, 200);
+            }
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Render Experience Cards
+        function renderCards() {
+            Object.keys(experiencesData).forEach(key => {
+                const container = document.getElementById('grid-' + key);
+                if (!container) return;
+                
+                container.innerHTML = experiencesData[key].map(item => `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden">
+                                <img src="${item.img}" alt="${item.title_es}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                                <span class="absolute bottom-3 left-3 bg-slate-900/80 text-emerald-400 text-xs px-2.5 py-1 rounded-md backdrop-blur font-semibold">
+                                    <i class="fa-solid fa-location-dot"></i> ${item.location}
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-black text-slate-900 text-lg mb-2">${currentLang === 'es' ? item.title_es : item.title_en}</h3>
+                                <p class="text-slate-600 text-xs leading-relaxed mb-4">${currentLang === 'es' ? item.desc_es : item.desc_en}</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button onclick="focusOnMap(${item.lat}, ${item.lng}, '${item.title_es}')" class="w-full py-2.5 rounded-xl border border-emerald-500/40 text-emerald-600 hover:bg-emerald-500 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-map-pin"></i> <span data-i18n="btn_view_map_point">${i18n[currentLang].btn_view_map_point}</span>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        // Toggle Language (ES / EN)
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.getElementById('lang-btn').innerText = currentLang === 'es' ? 'ES / EN' : 'EN / ES';
+            
+            // Translate static elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[currentLang][key]) {
+                    el.innerText = i18n[currentLang][key];
+                }
+            });
+
+            // Re-render cards in selected language
+            renderCards();
+        }
+
+        // Initialize Leaflet Map
+        function initMap() {
+            if (mapInstance) {
+                mapInstance.invalidateSize();
+                return;
+            }
+
+            // Coordinates for Sogamoso, Boyacá
+            mapInstance = L.map('interactive-map').setView([5.7153, -72.9333], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapInstance);
+
+            // Add Markers for all 24 experiences
+            Object.keys(experiencesData).forEach(cat => {
+                experiencesData[cat].forEach(exp => {
+                    const marker = L.marker([exp.lat, exp.lng]).addTo(mapInstance);
+                    marker.bindPopup(`
+                        <div style="width:180px">
+                            <img src="${exp.img}" style="width:100%; height:90px; object-fit:cover; border-radius:8px; mb-2">
+                            <strong style="font-size:12px; font-family:sans-serif">${currentLang === 'es' ? exp.title_es : exp.title_en}</strong>
+                            <p style="font-size:10px; color:#64748b; margin-top:4px">${exp.location}</p>
+                        </div>
+                    `);
+                });
+            });
+        }
+
+        // Focus Map on specific card click
+        function focusOnMap(lat, lng, title) {
+            navigateTo('mapa-interactivo');
+            setTimeout(() => {
+                if (mapInstance) {
+                    mapInstance.setView([lat, lng], 15);
+                }
+            }, 300);
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Initial Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+        });
+    </script>
+</body>
+</html>
