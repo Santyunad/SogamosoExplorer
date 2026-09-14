@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links (Desktop) -->
                 <nav class="hidden lg:flex space-x-1 items-center font-medium text-sm">
                     <button onclick="navigateTo('home')" class="px-3 py-2 rounded-lg hover:bg-slate-800 transition" data-i18n="nav_home">Inicio</button>
                     
@@ -320,7 +320,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Data Store AMPLIADA Y PROFUNDIZADA (Textos extensos con horarios, dificultad, contexto e instrucciones precisas)
+        // Data Store AMPLIADA Y CORREGIDA CON UBICACIONES Y TRADUCCIONES EXACTAS
         const experiencesData = {
             "rutas-ecologicas": [
                 {
@@ -333,19 +333,19 @@
                     detail_en: "⏱️ Recommended Hours: 06:00 - 12:00 | 📈 Difficulty: Medium-High | 📍 Max Elevation: 2,850 m.a.s.l. | 🎫 Entry: Free",
                     img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.725, lng: -72.920, location: "Sector Rural La Pillama, Sogamoso"
+                    lat: 5.7250, lng: -72.9200, location: "Sector Rural La Pillama, Sogamoso"
                 },
                 {
                     id: 2,
                     title_es: "Caminata al Cerro del Chinchanal",
                     title_en: "Chinchanal Hill Summit Hike",
-                    desc_es: "Mirador natural estratégico situado a 2.950 metros sobre el nivel del mar que domina una panorámica completa de 360 grados sobre el Valle de Sugamuxi y las sierras circundantes. Históricamente, este cerro funcionó como un punto ceremonial y de observación astronómica Muisca. La caminata implica un ascenso sostenido por senderos de herradura rodeados de arbustos altoandinos. Es un enclave excepcional para la fotografía de paisaje durante la salida y puesta del sol.",
+                    desc_es: "Mirador natural estratégico situado a 2.950 metros sobre el nivel del mar que domina una panorámica completa de 360 grados sobre el Valle de Sugamuxi y las sierras circundantes. Históricamente, este cerro funcionó como un punto ceremonial y de observación astronómica Muisca. La caminata implica un ascenso sustained por senderos de herradura rodeados de arbustos altoandinos. Es un enclave excepcional para la fotografía de paisaje durante la salida y puesta del sol.",
                     desc_en: "Strategic natural vantage point situated at 2,950 meters above sea level offering panoramic 360-degree views of the entire Sugamuxi Valley and surrounding mountain ranges. Historically, this peak functioned as a Muisca ceremonial observation post. The hike involves a continuous ascent along bridle paths surrounded by high-Andean shrubs. Exceptionally suited for landscape photography at sunrise and sunset.",
                     detail_es: "⏱️ Duración: 3.5 a 4 horas | 📈 Dificultad: Media | 🎒 Equipamiento: Chaqueta cortavientos y bastones de trekking",
                     detail_en: "⏱️ Duration: 3.5 to 4 hours | 📈 Difficulty: Medium | 🎒 Gear: Windproof jacket and trekking poles",
                     img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.710, lng: -72.940, location: "Vereda Moniquirá, Sogamoso"
+                    lat: 5.7100, lng: -72.9400, location: "Vereda Moniquirá, Sogamoso"
                 },
                 {
                     id: 3,
@@ -357,7 +357,7 @@
                     detail_en: "⏱️ Departure: 05:00 AM | 📈 Difficulty: High | 🌡️ Temp Range: 4°C to 12°C | 🧭 Certified local guide required",
                     img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.740, lng: -72.900, location: "Jurisdicción Páramo de Pisba"
+                    lat: 5.7400, lng: -72.9000, location: "Jurisdicción Páramo de Pisba"
                 }
             ],
             "rutas-urbanas": [
@@ -403,25 +403,25 @@
                     id: 7,
                     title_es: "Museo Arqueológico Suamox",
                     title_en: "Suamox Archaeological Museum",
-                    desc_es: "Institución patrimonial fundada en 1942 por el célebre antropólogo Eliécer Silva Célis. Albergada en el sitio sagrado de la antigua morada del Sumo Sacerdote Muisca, resguarda una extraordinaria colección de más de 4.000 piezas arqueológicas que incluyen piezas de orfebrería precolombina, cerámicas ceremoniales, utensilios de uso cotidiano, complejos textiles en algodón y telares, además de mofas y mumiados indígenas milenarios conservados intactos.",
+                    desc_es: "Institución patrimonial fundada en 1942 por el célebre antropólogo Eliécer Silva Célis. Albergada en el sitio sagrado de la antigua morada del Sumo Sacerdote Muisca, resguarda una extraordinaria colección de más de 4.000 piezas arqueológicas que incluyen piezas de orfebrería precolombina, cerámicas ceremoniales, utensilios de uso cotidiano, complejos textiles en algodón y telares, además de momias indígenas milenarias conservadas intactas.",
                     desc_en: "Heritage institution founded in 1942 by renowned anthropologist Eliécer Silva Célis. Built upon the sacred site of the ancient Muisca High Priest residence, it preserves an extraordinary collection of over 4,000 archaeological artifacts including pre-Columbian goldwork, ceremonial ceramics, daily tools, complex cotton textiles, and preserved ancient indigenous mummies.",
                     detail_es: "⏱️ Martes a Domingo: 09:00 - 17:00 | 🎟️ Tarifa: $12.000 COP (Descuento estudiantes) | 🎙️ Servicio de guía",
                     detail_en: "⏱️ Tue - Sun: 09:00 - 17:00 | 🎟️ Fee: $12,000 COP (Student discount available) | 🎙️ Guided tours",
                     img: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.722, lng: -72.928, location: "Calle 19 # 3-101, Sogamoso"
+                    lat: 5.7220, lng: -72.9280, location: "Calle 19 # 3-101, Sogamoso"
                 },
                 {
                     id: 8,
                     title_es: "Templo del Sol Muisca (Reconstrucción Histórica)",
                     title_en: "Muisca Sun Temple (Historical Reconstruction)",
                     desc_es: "Reconstrucción científica a tamaño real del templo sagrado consagrado al dios Xué (el Sol), levantado originalmente con gruesos troncos de guayacán, paredes de bahareque y un complejo entramado cónico de paja. Este lugar representaba el centro espiritual y astronómico más relevante para la confederación Muisca antes de su destrucción en el siglo XVI. En sus alrededores se conservan senderos interpretativos y tumbas arqueológicas de pozo.",
-                    desc_en: "Full-scale scientific reconstruction of the sacred temple dedicated to Sun deity Xué, originally constructed using heavy guayacan timber, bahareque walls, and a intricate conical thatched roof. This site formed the primary spiritual and astronomical center of the Muisca Confederation prior to its 16th-century destruction. Surrounding grounds include interpretive paths and shaft tombs.",
+                    desc_en: "Full-scale scientific reconstruction of the sacred temple dedicated to Sun deity Xué, originally constructed using heavy guayacan timber, bahareque walls, and an intricate conical thatched roof. This site formed the primary spiritual and astronomical center of the Muisca Confederation prior to its 16th-century destruction. Surrounding grounds include interpretive paths and shaft tombs.",
                     detail_es: "⏱️ Incluido en el recorrido del Museo Suamox | ☀️ Ritual del Sol en solsticios y equinoccios",
                     detail_en: "⏱️ Included with Suamox Museum admission | ☀️ Sun rituals during solstices and equinoxes",
                     img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.723, lng: -72.927, location: "Parque Arqueológico Suamox"
+                    lat: 5.7230, lng: -72.9270, location: "Parque Arqueológico Suamox"
                 },
                 {
                     id: 9,
@@ -433,7 +433,7 @@
                     detail_en: "⏱️ Open Access 24/7 | 📍 Location: Northern city entrance avenue park",
                     img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.713, lng: -72.937, location: "Glorieta Norte, Entrada a Sogamoso"
+                    lat: 5.7130, lng: -72.9370, location: "Glorieta Norte, Entrada a Sogamoso"
                 }
             ],
             "tradiciones": [
@@ -447,7 +447,7 @@
                     detail_en: "⏱️ Visiting Hours: 08:30 - 17:00 | 🧶 Hands-on experience to weave a souvenir sample on loom",
                     img: "https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.730, lng: -72.930, location: "Sector Tradicional Vereda El Carmen"
+                    lat: 5.7300, lng: -72.9300, location: "Sector Tradicional Vereda El Carmen"
                 },
                 {
                     id: 11,
@@ -459,7 +459,7 @@
                     detail_en: "⏱️ Hours: Mon - Sat (08:00 - 18:00) | 🏺 Direct sales of pottery and raw clay for sculpting",
                     img: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.690, lng: -72.900, location: "Vereda Morcá Sector Central, Sogamoso"
+                    lat: 5.6900, lng: -72.9000, location: "Vereda Morcá Sector Central, Sogamoso"
                 },
                 {
                     id: 12,
@@ -471,7 +471,7 @@
                     detail_en: "⏱️ Operating Hours: 09:00 - 19:30 (Continuous) | 💳 Accepts credit card payments",
                     img: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.716, lng: -72.932, location: "Carrera 11 # 12-45, Centro"
+                    lat: 5.7160, lng: -72.9320, location: "Carrera 11 # 12-45, Centro"
                 }
             ],
             "platos-tipicos": [
@@ -485,7 +485,7 @@
                     detail_en: "🍽️ Generous portion size | 📍 Recommended: Countryside restaurants and city center",
                     img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.715, lng: -72.933, location: "Restaurantes Tradicionales Centro Histórico"
+                    lat: 5.7150, lng: -72.9330, location: "Restaurantes Tradicionales Centro Histórico"
                 },
                 {
                     id: 14,
@@ -497,7 +497,7 @@
                     detail_en: "⏱️ Served hot all day long | ☕ Perfect pairing with hot spiced chocolate or coffee",
                     img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.720, lng: -72.935, location: "Paradero Tradicional La Arepa, Sogamoso"
+                    lat: 5.7200, lng: -72.9350, location: "Paradero Tradicional La Arepa, Sogamoso"
                 },
                 {
                     id: 15,
@@ -509,7 +509,7 @@
                     detail_en: "⏱️ Sunday farmer tradition | 🍲 Served as a main lunch course",
                     img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.714, lng: -72.932, location: "Piqueteaderos Tradicionales de la Calle 11"
+                    lat: 5.7140, lng: -72.9320, location: "Piqueteaderos Tradicionales de la Calle 11"
                 }
             ],
             "cafes-postres": [
@@ -523,7 +523,7 @@
                     detail_en: "⏱️ Peak Freshness Hours: 15:30 - 18:00 (Freshly baked out of the oven)",
                     img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.716, lng: -72.934, location: "Panaderías del Parque de la Villa"
+                    lat: 5.7160, lng: -72.9340, location: "Panaderías del Parque de la Villa"
                 },
                 {
                     id: 17,
@@ -535,7 +535,7 @@
                     detail_en: "⏱️ Hours: 08:00 - 21:00 | 📶 Workspace friendly with Wi-Fi and quiet atmosphere",
                     img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.717, lng: -72.930, location: "Zona Rosa Calle 12, Sogamoso"
+                    lat: 5.7170, lng: -72.9300, location: "Zona Rosa Calle 12, Sogamoso"
                 },
                 {
                     id: 18,
@@ -547,7 +547,7 @@
                     detail_en: "⏱️ Vacuum-sealed glass jars available, perfect for travel souvenirs",
                     img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.718, lng: -72.929, location: "Dulcerías de la Carrera 11, Sogamoso"
+                    lat: 5.7180, lng: -72.9290, location: "Dulcerías de la Carrera 11, Sogamoso"
                 }
             ],
             "festividades": [
@@ -561,7 +561,7 @@
                     detail_en: "🗓️ Dates: Mid-July (Annual) | 📍 Venues: Villa Square and Main Event Stage",
                     img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.715, lng: -72.933, location: "Plaza de Eventos y Calles Principales"
+                    lat: 5.7150, lng: -72.9330, location: "Plaza de Eventos y Calles Principales"
                 },
                 {
                     id: 20,
@@ -573,7 +573,7 @@
                     detail_en: "🗓️ Dates: October | 🌾 100% authentic rural folk atmosphere",
                     img: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.692, lng: -72.901, location: "Plaza Principal de la Vereda Morcá"
+                    lat: 5.6920, lng: -72.9010, location: "Plaza Principal de la Vereda Morcá"
                 },
                 {
                     id: 21,
@@ -585,7 +585,7 @@
                     detail_en: "🗓️ Season: December 7th to January 6th | 🎄 Lights illuminated nightly from 18:30",
                     img: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.715, lng: -72.933, location: "Parques Principales y Centro Histórico"
+                    lat: 5.7155, lng: -72.9335, location: "Parques Principales y Centro Histórico"
                 }
             ],
             "deportes-aventura": [
@@ -599,11 +599,11 @@
                     detail_en: "🗓️ Variable Dates (First Semester) | 🚴 Category: Professional high-performance",
                     img: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.720, lng: -72.940, location: "Rutas Nacionales y Circuito Urbano"
+                    lat: 5.7200, lng: -72.9400, location: "Rutas Nacionales y Circuito Urbano"
                 },
                 {
                     id: 23,
-                    title_es: "Travesía MTB Sugamuxi al Lago de Tota",
+                    title_es: "Travesía MTB Ciclomontañismo Sugamuxi al Lago de Tota",
                     title_en: "Sugamuxi to Tota Lake MTB Challenge",
                     desc_es: "Ruta de ciclomontañismo modalidad cross-country de 45 kilómetros de recorrido que inicia en el casco urbano de Sogamoso a 2.560 msnm y asciende por senderos de herradura, caminos veredales y bosques de pino hasta alcanzar la cuenca del Lago de Tota a 3.015 msnm. Requiere bicicleta de montaña equipada con suspensión y buen estado de preparación aeróbica.",
                     desc_en: "A 45-kilometer cross-country mountain bike trail starting in urban Sogamoso at 2,560 m.a.s.l. and ascending along dirt trails, rural farm roads, and pine forests to reach the shores of Lake Tota at 3,015 m.a.s.l. Requires a mountain bike equipped with front suspension and strong cardiovascular conditioning.",
@@ -611,7 +611,7 @@
                     detail_en: "⏱️ Estimated Time: 4 to 6 hours | 📈 Elevation Gain: +1,100 m | 🛠️ Mechanical support required",
                     img: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.700, lng: -72.910, location: "Salida Sogamoso hacia Lago de Tota"
+                    lat: 5.7000, lng: -72.9100, location: "Salida Sogamoso hacia Lago de Tota"
                 },
                 {
                     id: 24,
@@ -623,7 +623,7 @@
                     detail_en: "⏱️ Access: 07:00 - 17:00 | 🧗 Helmet, harness & UIAA certified dynamic ropes mandatory",
                     img: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=600&q=80",
                     attribution: "Foto: Unsplash (Licencia CC0)",
-                    lat: 5.735, lng: -72.915, location: "Farallones del Norte, Sogamoso"
+                    lat: 5.7350, lng: -72.9150, location: "Farallones del Norte, Sogamoso"
                 }
             ]
         };
@@ -646,7 +646,7 @@
                 btn_explore_map: "Explorar Mapa de Rutas", btn_see_routes: "Ver Rutas",
                 section_explorer_title: "Explora por Categorías", cat_1_title: "Rutas Turísticas", cat_1_desc: "Senderos naturales y recorridos urbanos históricos.",
                 cat_2_title: "Cultura & Historia", cat_2_desc: "Museo Arqueológico Suamox, Templo del Sol y saberes ancestrales.", cat_3_title: "Gastronomía",
-                cat_3_desc: "Cocido Boyacense, Arepas de la Villa del Sol y cafés de origen.", cat_4_title: "Eventos & Festivales", cat_4_desc: "Fiestas del Sol y del Acero, encuentros de ciclismo y tradición.",
+                cat_3_desc: "Cocido Boyacense, Arepas de la Villa del Sol y cafés de origen.", cat_4_title: "Eventos & Festivales", cat_4_desc: "Fiestas del Sol y del Acero, encuentros de ciclomontañismo y tradición.",
                 sec_1_1_title: "1.1 Rutas Ecológicas y de Naturaleza", sec_1_1_desc: "Senderos naturales y ecosistemas andinos que rodean el municipio de Sogamoso.",
                 sec_1_2_title: "1.2 Rutas Urbanas y Arquitectónicas", sec_1_2_desc: "Recorridos a pie por plazas, plazas de mercado y patrimonio del casco urbano.",
                 sec_2_1_title: "2.1 Patrimonio Arqueológico e Histórico", sec_2_1_desc: "Sitiología sagrada y legado cultural de la civilización Muisca en Suamox.",
@@ -678,7 +678,7 @@
                 btn_explore_map: "Explore Route Map", btn_see_routes: "View Routes",
                 section_explorer_title: "Explore by Categories", cat_1_title: "Tourist Routes", cat_1_desc: "Ecological hiking trails and historic urban walks.",
                 cat_2_title: "Culture & History", cat_2_desc: "Suamox Archaeological Museum, Sun Temple, and ancestral skills.", cat_3_title: "Gastronomy",
-                cat_3_desc: "Boyacense stew, local corn cakes, and origin specialty coffee.", cat_4_title: "Events & Festivals", cat_4_desc: "Sun & Steel Festival, cycling tournaments, and folklore.",
+                cat_3_desc: "Boyacense stew, local corn cakes, and origin specialty coffee.", cat_4_title: "Events & Festivals", cat_4_desc: "Sun & Steel Festival, mountain biking tournaments, and folklore.",
                 sec_1_1_title: "1.1 Ecological & Nature Routes", sec_1_1_desc: "Natural trails and Andean ecosystems around Sogamoso municipality.",
                 sec_1_2_title: "1.2 Urban & Architectural Routes", sec_1_2_desc: "Walking tours through historic squares, markets, and urban heritage.",
                 sec_2_1_title: "2.1 Archaeological & Historic Heritage", sec_2_1_desc: "Sacred heritage and cultural legacy of the Muisca civilization in Suamox.",
